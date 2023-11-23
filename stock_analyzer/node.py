@@ -11,6 +11,10 @@ class Node:
         """Return the number of items in the node."""
         return len(self.items)
 
+    def is_leaf(self):
+        """Return whether this node is a leaf node."""
+        return len(self.children) == 0
+
     def add_item(self, item):
         """Add the given item to this node in the proper order."""
         for i in range(self.item_count()):
@@ -28,10 +32,19 @@ class Node:
         left = []
         right = []
         for i in range(middle_index):
-            left.append(self.children[i])
+            left.append(self.items[i])
         for i in range(middle_index + 1, self.item_count()):
-            right.append(self.children[i])
-        return left, middle, right
+            right.append(self.items[i])
+
+        left_children = []
+        right_children = []
+        if not self.is_leaf():
+            for i in range(len(left) + 1):
+                left_children.append(self.children[i])
+            for i in range(len(left) + 1, self.child_count()):
+                right_children.append(self.children[i])
+
+        return Node(left, left_children), middle, Node(right, right_children)
 
     def split_child(self, index):
         """Split the indexth child (starting at 0) into two children, and moves the middle
