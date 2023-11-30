@@ -1,4 +1,5 @@
 from stock_analyzer.node import Node
+from queue import Queue
 
 
 class BTree:
@@ -35,16 +36,18 @@ class BTree:
 
     def find(self, item):
         """Return True if the item is found in the tree, False otherwise."""
-        current = self.root
-        while not current.is_leaf():
-            next_index = 0
+        queue = Queue()
+        queue.put(self.root)
+        while not queue.empty():
+            current = queue.get()
             for i in range(current.item_count()):
                 if item == current.items[i]:
                     return True
 
-                if item > current.items[i]:
-                    next_index += 1
+                if i == 0 and item <= current.items[i] and not current.is_leaf():
+                    queue.put(current.children[i])
+                if item >= current.items[i] and not current.is_leaf():
+                    queue.put(current.children[i + 1])
                 else:
                     break
-            current = current.children[next_index]
         return False
