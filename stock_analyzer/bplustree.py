@@ -33,7 +33,6 @@ class BPlusTree:
         if self.root.item_count() > self.L:
             left, mid, right = self.root.split_node()
             left.nextLeaf = right
-            right.nextLeaf = self.root.nextLeaf
             mid = Node([mid], [left, right])
             self.root = mid
 
@@ -52,3 +51,16 @@ class BPlusTree:
                     break
             current = current.children[next_index]
         return False
+
+    def printTree(self):
+        current = self.root
+        while not current.is_leaf():
+            current = current.children[0]
+
+        for i in range(current.item_count()):
+            print(current.items[i])
+
+        while current.nextLeaf is not None:
+            current = current.nextLeaf
+            for i in range(current.item_count()):
+                print(current.items[i])
