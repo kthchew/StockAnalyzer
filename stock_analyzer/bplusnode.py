@@ -50,8 +50,8 @@ class Node:
                 right_children.append(self.children[i])
 
         else:
-            middle_index = math.ceil((self.item_count()-1) / 2)
-            for i in range(middle_index):
+            middle_index = math.ceil(self.item_count()/2)-1
+            for i in range(middle_index + 1):
                 left.append(self.items[i])
             for i in range(middle_index + 1, self.item_count()):
                 right.append(self.items[i])
@@ -64,7 +64,7 @@ class Node:
         element in that child to the current node."""
         left, middle, right = self.children[index].split_node()
         left.nextLeaf = right
-        right.nextLeaf = self.nextLeaf
+        right.nextLeaf = self.children[index].nextLeaf
         self.children[index] = left
         self.children.insert(index + 1, right)
         self.add_item(middle)
