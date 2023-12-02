@@ -37,7 +37,7 @@ class Node:
         right_children = []
 
         if not self.is_leaf():
-            middle_index = math.ceil(self.item_count()/2)
+            middle_index = math.ceil(self.item_count()/2)-1
             for i in range(middle_index-1):
                 left.append(self.items[i])
             middle = self.items[middle_index]
