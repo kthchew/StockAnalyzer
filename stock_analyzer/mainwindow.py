@@ -37,6 +37,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.dataStructure.addItems(["B Tree", "B+ Tree", "Red-Black Tree"])
         self.dataStructure.setPlaceholderText("Data Structure")
 
+        self.bSettingsLabel = QtWidgets.QLabel()
+        self.bSettingsLabel.setText("B/B+ Tree Settings (no effect on R/B tree)")
+        self.bSettingsLabel.setSizePolicy(QtWidgets.QSizePolicy.Policy.Maximum, QtWidgets.QSizePolicy.Policy.Maximum)
+        self.nVal = QtWidgets.QSpinBox()
+        self.nVal.setMinimum(1)
+        self.nVal.setMaximum(100)
+        self.nVal.setValue(5)
+        self.nVal.setPrefix("Max Children: ")
+        self.lVal = QtWidgets.QSpinBox()
+        self.lVal.setMinimum(1)
+        self.lVal.setMaximum(100)
+        self.lVal.setValue(4)
+        self.lVal.setPrefix("Max Items Per Node: ")
+
         self.makeTreeButton = QtWidgets.QPushButton("Build Tree")
         self.makeTreeButton.clicked.connect(self.timeCreateTree)
 
@@ -62,6 +76,11 @@ class MainWindow(QtWidgets.QMainWindow):
         comboBoxLayout.addWidget(self.dateFilterEnd)
         comboBoxLayout.addWidget(self.dataStructure)
 
+        bSettingsLayout = QtWidgets.QHBoxLayout()
+        bSettingsLayout.addWidget(self.bSettingsLabel)
+        bSettingsLayout.addWidget(self.nVal)
+        bSettingsLayout.addWidget(self.lVal)
+
         buttonLayout = QtWidgets.QHBoxLayout()
         buttonLayout.addWidget(self.makeTreeButton)
         buttonLayout.addWidget(self.makeMapButton)
@@ -74,6 +93,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.addLayout(comboBoxLayout)
+        self.layout.addLayout(bSettingsLayout)
         self.layout.addLayout(buttonLayout)
         self.layout.addWidget(self.webMapView)
         self.layout.addLayout(bottomLayout)
@@ -97,9 +117,9 @@ class MainWindow(QtWidgets.QMainWindow):
     def createTree(self):
         match self.dataStructure.currentIndex():
             case 0:
-                self.tree = BTree(5, 4)
+                self.tree = BTree(self.nVal.value(), self.lVal.value())
             case 1:
-                self.tree = BPlusTree(5, 4)
+                self.tree = BPlusTree(self.nVal.value(), self.lVal.value())
             case 2:
                 self.tree = RedBlackTree()
             case _:
