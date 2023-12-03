@@ -28,7 +28,6 @@ class CountryAction(QtWidgets.QWidgetAction):
             self.parent().selectedCountries.remove(self.text().lower())
         else:
             self.parent().selectedCountries.add(self.text().lower())
-        print(self.parent().selectedCountries)
 
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
@@ -39,19 +38,19 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.countryFilter = QtWidgets.QMenu()
         self.countryFilter.setTitle("Country Filter")
-        self.countryFilter.selectedCountries = set()
         self.countryFilter.allCountries = {"USA", "Japan", "Germany", "Switzerland", "Canada", "Netherlands", "France"}
+        self.countryFilter.selectedCountries = set([x.lower() for x in self.countryFilter.allCountries])
         filterItem = CountryAction(self.countryFilter)
         filterItem.setText("Select All")
         filterItem.setCheckable(True)
-        filterItem.setChecked(False)
+        filterItem.setChecked(True)
         filterItem.triggered.connect(filterItem.toggleCountry)
         self.countryFilter.addAction(filterItem)
         for country in self.countryFilter.allCountries:
             filterItem = CountryAction(self.countryFilter)
             filterItem.setText(country)
             filterItem.setCheckable(True)
-            filterItem.setChecked(False)
+            filterItem.setChecked(True)
             filterItem.triggered.connect(filterItem.toggleCountry)
             self.countryFilter.addAction(filterItem)
         self.countryFilterButton = QtWidgets.QPushButton()
