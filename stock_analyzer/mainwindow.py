@@ -3,8 +3,10 @@ import time
 
 from PySide6 import QtCore, QtWidgets, QtWebEngineWidgets
 
+from stock_analyzer.bplustree import BPlusTree
 from stock_analyzer.btree import BTree
 from stock_analyzer.marketday import MarketDay
+from stock_analyzer.redblacktree import RedBlackTree
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -92,10 +94,10 @@ class MainWindow(QtWidgets.QMainWindow):
         match self.dataStructure.currentIndex():
             case 0:
                 self.tree = BTree(5, 4)
-            # case 1:
-            #     self.tree = BPlusTree(5, 4)
-            # case 2:
-            #     self.tree = RBTree()
+            case 1:
+                self.tree = BPlusTree(5, 4)
+            case 2:
+                self.tree = RedBlackTree()
             case _:
                 return
 
