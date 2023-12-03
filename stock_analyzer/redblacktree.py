@@ -35,10 +35,12 @@ class RedBlackTree:
     def findHelper(self, node, item):
         if node is None or item == node.item:
             return node
-        if item < node.item:
+        if item < node.item and node.left:
             return self.findHelper(node.left, item)
-        else:
+        elif item > node.item and node.right:
             return self.findHelper(node.right, item)
+        else:
+            return None
 
     """main function that executes helper functions and inserts a node into the tree, from here we also 
     balance the tree color if it's unbalanced (change red to black, etc, and guarantee that the root is black)"""
@@ -54,7 +56,7 @@ class RedBlackTree:
         parent = None
         current = self.root
 
-        while current != self.null:
+        while current and current != self.null:
             parent = current
             if newNode.item < current.item:
                 current = current.left
@@ -64,9 +66,9 @@ class RedBlackTree:
         newNode.parent = parent
         if parent is None:
             self.root = newNode
-        elif newNode.item < parent.item:
+        elif parent and newNode.item < parent.item:
             parent.left = newNode
-        else:
+        elif parent:
             parent.right = newNode
 
         newNode.left = self.null
@@ -77,7 +79,7 @@ class RedBlackTree:
             if node.parent == node.parent.parent.left:
 
                 nodeUncle = node.parent.parent.right
-                if nodeUncle.color == 1:
+                if nodeUncle and nodeUncle.color == 1:
                     node.parent.color = 0
                     nodeUncle.color = 0
                     node.parent.parent.color = 1
@@ -93,7 +95,7 @@ class RedBlackTree:
                     self.rotateRight(node.parent.parent)
             else:
                 nodeUncle = node.parent.parent.left
-                if nodeUncle.color == 1:
+                if nodeUncle and nodeUncle.color == 1:
                     node.parent.color = 0
                     nodeUncle.color = 0
                     node.parent.parent.color = 1
@@ -122,31 +124,39 @@ class RedBlackTree:
 
     def rotateLeft(self, node):
         rightChild = node.right
-        node.right = rightChild.left
 
-        if rightChild.left:
-            rightChild.left.parent = node
+        if rightChild:
+            node.right = rightChild.left
 
-        rightChild.left = node
-        rightChild.parent = node.parent
-        node.parent = rightChild
+            if rightChild.left:
+                rightChild.left.parent = node
 
-        self.updateParentChildNodes(rightChild.parent, node, rightChild)
-        return rightChild
+            rightChild.left = node
+            rightChild.parent = node.parent
+            node.parent = rightChild
+
+            self.updateParentChildNodes(rightChild.parent, node, rightChild)
+            return rightChild
+
+        return node
 
     def rotateRight(self, node):
         leftChild = node.left
-        node.left = leftChild.right
 
-        if leftChild.right:
-            leftChild.right.parent = node
+        if leftChild:
+            node.left = leftChild.right
 
-        leftChild.right = node
-        leftChild.parent = node.parent
-        node.parent = leftChild
+            if leftChild.right:
+                leftChild.right.parent = node
 
-        self.updateParentChildNodes(leftChild.parent, node, leftChild)
-        return leftChild
+            leftChild.right = node
+            leftChild.parent = node.parent
+            node.parent = leftChild
+
+            self.updateParentChildNodes(leftChild.parent, node, leftChild)
+            return leftChild
+
+        return node
 
     def returnRoot(self):
         return self.root

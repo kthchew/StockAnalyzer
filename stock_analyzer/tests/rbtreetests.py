@@ -1,7 +1,5 @@
 import csv
 import unittest
-import sys
-print(sys.path)
 
 from redblacktree import RedBlackTree
 from marketday import MarketDay
@@ -13,12 +11,8 @@ class RBTreeTests(unittest.TestCase):
         tree.insert(5)
         tree.insert(7)
         tree.insert(3)
-        # tree.insert(11)
-        # tree.insert(6)
-        # tree.insert(4)
-        # tree.insert(17)
 
-        self.assertEqual(tree.root.key, 5)
+        self.assertEqual(tree.root.item, 5)
         self.assertEqual(tree.root.color, 0)
         self.assertEqual(tree.root.left.color, 1)
         self.assertEqual(tree.root.right.color, 1)
@@ -44,8 +38,13 @@ class RBTreeTests(unittest.TestCase):
                                 "26.01165263931803", "25.302781633056032", "25.529226303100582",
                                 "3230400.0", "0.0", "0.0", "FL", "footwear", "usa")
 
-        self.assertTrue(tree.find(dataPoint))
-        self.assertFalse(tree.find(data_point2))
+        result = tree.find(dataPoint)
+        self.assertIsNotNone(result, f"expected {dataPoint} to be in the tree")
+
+        result = tree.find(data_point2)
+        self.assertIsNone(result, f"expected {data_point2} to not be in the tree")
+
+        print("finished with tests")
 
 
 if __name__ == '__main__':
