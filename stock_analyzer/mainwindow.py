@@ -3,6 +3,7 @@ import time
 
 from PySide6 import QtCore, QtWidgets, QtWebEngineWidgets
 
+from stock_analyzer.map import testMap
 from stock_analyzer.bplustree import BPlusTree
 from stock_analyzer.btree import BTree
 from stock_analyzer.marketday import MarketDay
@@ -44,7 +45,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.makeMapButton.setEnabled(False)
 
         self.webMapView = QtWebEngineWidgets.QWebEngineView()
-        self.webMapView.load(QtCore.QUrl("https://example.com"))
+        self.loadMap("intro.html")
 
         self.mapTimerLabel = QtWidgets.QLabel()
         self.mapTimerLabel.setText("Time to create map: ?")
@@ -80,8 +81,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.container.setLayout(self.layout)
         self.setCentralWidget(self.container)
 
-    def loadMap(self, url):
-        self.webMapView.load(url)
+    def loadMap(self, fileName):
+        with open(fileName, 'r') as file:
+            data = file.read()
+        self.webMapView.setHtml(data)
 
     def timeCreateTree(self):
         """Times the tree creation and adds the time in seconds to the UI."""
@@ -121,5 +124,5 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mapTimerLabel.setText("Time to create map: " + str(round(end - start, 2)) + " sec")
 
     def createMap(self):
-        # TODO: actually create map here
-        return "https://www.example.com"
+        testMap()
+        return "output_map.html"
