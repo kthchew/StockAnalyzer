@@ -6,34 +6,38 @@ class RedBlackTree:
      node where we assign it to null and 0 represents the color of the node. We also set root to be equal to the
      null node """
     def __init__(self):
-        self.null = RedBlackNode(None, 0) # inserts black root
+        self.null = RedBlackNode(None, 0) # inserts black root (0)
         self.root = self.null
 
-    def findNode(self, node=None, key=None):
-        if node is None:
-            node = self.root
+    """executes the find function that locates the date within the RB tree"""
+    def find(self, item):
+        return self.findHelper(self.root, item)
 
-        if node == self.null or key == node.key:
+    """serves as the helper function that helps locate a given date in the RB Tree"""
+    def findHelper(self, node, item):
+        if node == self.null or item == node.item:
             return node
-
-        if key < node.key:
-            return self.findNode(node.left, key)
+        if item < node.item:
+            return self.findHelper(node.left, item)
         else:
-            return self.findNode(node.right, key)
+            return self.findHelper(node.right, item)
 
-    def insertNode(self, key):
-        newNode = RedBlackNode(key, 1)
-        # 1 is red
+    """main function that executes helper functions and inserts a node into the tree, from here we also 
+    balance the tree color if it's unbalanced (change red to black, etc, and guarantee that the root is black)"""
+    def insert(self, item):
+        newNode = RedBlackNode(item, 1)  # 1 is red
         self.insertHelper(newNode)
         self.balanceColor(newNode)
 
+    """the insert helper function carries all the functionality of inserting a new node into
+    the RB Tree"""
     def insertHelper(self, newNode):
         parent = None
         current = self.root
 
         while current != self.null:
             parent = current
-            if newNode < current.key:
+            if newNode < current.item:
                 current = current.left
             else:
                 current = current.right
@@ -41,7 +45,7 @@ class RedBlackTree:
         newNode.parent = parent
         if parent is None:
             self.root = newNode
-        elif newNode.key < parent.key:
+        elif newNode.item < parent.item:
             parent.left = newNode
         else:
             parent.right = newNode
@@ -86,6 +90,16 @@ class RedBlackTree:
 
         self.root.color = 0 # reset root to black
 
+    def updateParentChildNodes(self, parent, node, child):
+        if parent:
+            if parent.left == node:
+                parent.left = child
+            else:
+                parent.right = child
+
+        if child:
+            child.parent = parent
+
     def rotateLeft(self, node):
         rightChild = node.right
         node.right = rightChild.left
@@ -116,4 +130,7 @@ class RedBlackTree:
 
     def returnRoot(self):
         return self.root
+
+    # def calculateTradingVolume(self, dateStart, dateEnd):
+
 

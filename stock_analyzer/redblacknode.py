@@ -5,3 +5,8 @@ class RedBlackNode():
         self.parent = parent
         self.left = left
         self.right = right
+
+    def __lt__(self, other):
+        if other is None or not isinstance(other, RedBlackNode):
+            return NotImplemented
+        return self.item < other.item
