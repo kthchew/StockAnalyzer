@@ -14,7 +14,7 @@ class CountryAction(QtWidgets.QWidgetAction):
     def toggleCountry(self, checked):
         if self.text() == "Select All":
             if checked:
-                self.parent().selectedCountries = self.parent().allCountries
+                self.parent().selectedCountries = set([x.lower() for x in self.parent().allCountries])
                 for item in self.parent().children():
                     item.setChecked(True)
             else:
