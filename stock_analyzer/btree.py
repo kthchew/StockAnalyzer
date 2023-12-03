@@ -55,6 +55,9 @@ class BTree:
         return False
 
     def runDateFilter(self, start_date: time.struct_time, end_date: time.struct_time, function, *args):
+        """Runs the provided function on all items between the start and end date.
+        The function's first argument is the item in the tree to process. Other arguments provided to this method
+        are passed into the provided function."""
         queue = Queue()
         queue.put(self.root)
         while not queue.empty():
@@ -63,7 +66,7 @@ class BTree:
                 item = current.items[i]
 
                 if start_date <= item.date <= end_date:
-                    function(*args)
+                    function(item, *args)
 
                 # things to the left have an older date, so check this is at least the start date (if not, then useful
                 # items can't possibly be to the left

@@ -65,13 +65,13 @@ class BTreeTests(unittest.TestCase):
         tree = self.makeTree()
         start = time.strptime("2023-09-19 00:00:00-04:00", "%Y-%m-%d %H:%M:%S%z")
         end = time.strptime("2023-09-21 00:00:00-04:00", "%Y-%m-%d %H:%M:%S%z")
-        a = [100]
+        a = []
 
-        def increment(arr):
-            arr[0] = arr[0] + 1
+        def increment(item, arr):
+            arr.append(item.country)
 
         tree.runDateFilter(start, end, increment, a)
-        self.assertEqual(103, a[0])
+        self.assertEqual(["usa", "usa", "usa"], a)
 
 
 
