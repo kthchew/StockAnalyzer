@@ -1,4 +1,5 @@
-from stock_analyzer.redblacknode import RedBlackNode
+from redblacknode import RedBlackNode
+from marketday import MarketDay
 
 # 0 is black, 1 is red
 class RedBlackTree:
@@ -9,13 +10,30 @@ class RedBlackTree:
         self.null = RedBlackNode(None, 0) # inserts black root (0)
         self.root = self.null
 
+    def calculateTradingVolumes(self, dateStart, dateEnd):
+        result = {}
+        self.calculateTradingVolumesHelper(self.root, dateStart, dateEnd, result)
+        return result
+
+    def calculateTradingVolumesHelper(self, node, dateStart, dateEnd, result):
+        if node == self.null:
+            return
+
+        """checking to see here if the date is within the range add it"""
+        if dateStart <= node.item.date <= dateEnd:
+            country = node.item.country
+            result[country] = result.get(country, 0.0) + node.item.vol
+
+        self.calculateTradingVolumesHelper(node.left, dateStart, dateEnd, result)
+        self.calculateTradingVolumesHelper(node.right, dateStart, dateEnd, result)
+        #  calculates the left and right subtrees
     """executes the find function that locates the date within the RB tree"""
     def find(self, item):
         return self.findHelper(self.root, item)
 
     """serves as the helper function that helps locate a given date in the RB Tree"""
     def findHelper(self, node, item):
-        if node == self.null or item == node.item:
+        if node is None or item == node.item:
             return node
         if item < node.item:
             return self.findHelper(node.left, item)
@@ -31,13 +49,14 @@ class RedBlackTree:
 
     """the insert helper function carries all the functionality of inserting a new node into
     the RB Tree"""
+
     def insertHelper(self, newNode):
         parent = None
         current = self.root
 
         while current != self.null:
             parent = current
-            if newNode < current.item:
+            if newNode.item < current.item:
                 current = current.left
             else:
                 current = current.right
@@ -54,11 +73,11 @@ class RedBlackTree:
         newNode.right = self.null
 
     def balanceColor(self, node):
-        while node.parent.color == 1:
+        while node.parent and node.parent.color == 1:
             if node.parent == node.parent.parent.left:
-                nodeUncle = node.parent.parent.right
 
-                if nodeUncle == 1:
+                nodeUncle = node.parent.parent.right
+                if nodeUncle.color == 1:
                     node.parent.color = 0
                     nodeUncle.color = 0
                     node.parent.parent.color = 1
@@ -73,7 +92,8 @@ class RedBlackTree:
                     node.parent.parent.color = 1
                     self.rotateRight(node.parent.parent)
             else:
-                if nodeUncle == 1:
+                nodeUncle = node.parent.parent.left
+                if nodeUncle.color == 1:
                     node.parent.color = 0
                     nodeUncle.color = 0
                     node.parent.parent.color = 1

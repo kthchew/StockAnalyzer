@@ -1,13 +1,15 @@
 import csv
 import unittest
+import sys
+print(sys.path)
 
-from stock_analyzer.redblacktree import RedBlackTree
-from stock_analyzer.marketday import MarketDay
+from redblacktree import RedBlackTree
+from marketday import MarketDay
 
 class RBTreeTests(unittest.TestCase):
     def testBasicInsertions(self):
         # example from slide deck 4
-        tree = RedBlackTree(3, 2)
+        tree = RedBlackTree()
         tree.insert(5)
         tree.insert(7)
         tree.insert(3)
