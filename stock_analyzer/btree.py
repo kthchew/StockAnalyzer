@@ -1,3 +1,5 @@
+import time
+
 from stock_analyzer.bnode import Node
 from queue import Queue
 
@@ -51,3 +53,22 @@ class BTree:
                 else:
                     break
         return False
+
+    def runDateFilter(self, start_date: time.struct_time, end_date: time.struct_time, function, *args):
+        queue = Queue()
+        queue.put(self.root)
+        while not queue.empty():
+            current: Node = queue.get()
+            for i in range(current.item_count()):
+                item = current.items[i]
+
+                if start_date <= item.date <= end_date:
+                    function(*args)
+
+                # things to the left have an older date, so check this is at least the start date (if not, then useful
+                # items can't possibly be to the left
+                # similar logic with searching to the right
+                if i == 0 and item.date >= start_date and not current.is_leaf():
+                    queue.put(current.children[i])
+                if item.date <= end_date and not current.is_leaf():
+                    queue.put(current.children[i + 1])

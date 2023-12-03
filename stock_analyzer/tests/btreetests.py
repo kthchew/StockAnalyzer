@@ -1,4 +1,5 @@
 import csv
+import time
 import unittest
 
 from stock_analyzer.btree import BTree
@@ -6,6 +7,19 @@ from stock_analyzer.marketday import MarketDay
 
 
 class BTreeTests(unittest.TestCase):
+    def makeTree(self):
+        tree = BTree(3, 2)
+        with open("test.csv") as file:
+            reader = csv.reader(file)
+            for r in reader:
+                # skip header row
+                if r[0] == "Date":
+                    continue
+                # column brand name is skipped
+                data_point = MarketDay(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[9], r[10], r[11])
+                tree.insert(data_point)
+        return tree
+
     def test_basic_insertions(self):
         # example from slide deck 4
         tree = BTree(3, 2)
@@ -34,16 +48,7 @@ class BTreeTests(unittest.TestCase):
         self.assertEqual(tree.root.children[1].children[1].items, [11, 17])
 
     def test_find(self):
-        tree = BTree(3, 2)
-        with open("test.csv") as file:
-            reader = csv.reader(file)
-            for r in reader:
-                # skip header row
-                if r[0] == "Date":
-                    continue
-                # column brand name is skipped
-                data_point = MarketDay(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[9], r[10], r[11])
-                tree.insert(data_point)
+        tree = self.makeTree()
 
         data_point = MarketDay("2023-09-20 00:00:00-04:00", "564.3499755859375",
                               "569.219970703125", "562.6599731445312", "563.8300170898438",
@@ -55,6 +60,19 @@ class BTreeTests(unittest.TestCase):
 
         self.assertTrue(tree.find(data_point))
         self.assertFalse(tree.find(data_point2))
+
+    def testRunDateFilter(self):
+        tree = self.makeTree()
+        start = time.strptime("2023-09-19 00:00:00-04:00", "%Y-%m-%d %H:%M:%S%z")
+        end = time.strptime("2023-09-21 00:00:00-04:00", "%Y-%m-%d %H:%M:%S%z")
+        a = [100]
+
+        def increment(arr):
+            arr[0] = arr[0] + 1
+
+        tree.runDateFilter(start, end, increment, a)
+        self.assertEqual(103, a[0])
+
 
 
 if __name__ == '__main__':
