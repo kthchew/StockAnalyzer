@@ -10,6 +10,26 @@ from stock_analyzer.marketday import MarketDay
 from stock_analyzer.redblacktree import RedBlackTree
 
 
+class CountryAction(QtWidgets.QWidgetAction):
+    def toggleCountry(self, checked):
+        if self.text() == "Select All":
+            if checked:
+                self.parent().selectedCountries = self.parent().allCountries
+                for item in self.parent().children():
+                    item.setChecked(True)
+            else:
+                self.parent().selectedCountries.clear()
+                for item in self.parent().children():
+                    item.setChecked(False)
+            print(self.parent().selectedCountries)
+            return
+
+        if self.text().lower() in self.parent().selectedCountries:
+            self.parent().selectedCountries.remove(self.text().lower())
+        else:
+            self.parent().selectedCountries.add(self.text().lower())
+        print(self.parent().selectedCountries)
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -17,8 +37,26 @@ class MainWindow(QtWidgets.QMainWindow):
         self.tree = None
         self.setWindowTitle("Stock Analyzer")
 
-        self.countryFilter = QtWidgets.QComboBox()
-        self.countryFilter.setPlaceholderText("Country Filter")
+        self.countryFilter = QtWidgets.QMenu()
+        self.countryFilter.setTitle("Country Filter")
+        self.countryFilter.selectedCountries = set()
+        self.countryFilter.allCountries = {"USA", "Japan", "Germany", "Switzerland", "Canada", "Netherlands", "France"}
+        filterItem = CountryAction(self.countryFilter)
+        filterItem.setText("Select All")
+        filterItem.setCheckable(True)
+        filterItem.setChecked(False)
+        filterItem.triggered.connect(filterItem.toggleCountry)
+        self.countryFilter.addAction(filterItem)
+        for country in self.countryFilter.allCountries:
+            filterItem = CountryAction(self.countryFilter)
+            filterItem.setText(country)
+            filterItem.setCheckable(True)
+            filterItem.setChecked(False)
+            filterItem.triggered.connect(filterItem.toggleCountry)
+            self.countryFilter.addAction(filterItem)
+        self.countryFilterButton = QtWidgets.QPushButton()
+        self.countryFilterButton.setText("Country Filter")
+        self.countryFilterButton.setMenu(self.countryFilter)
 
         self.highlightedFeature = QtWidgets.QComboBox()
         self.highlightedFeature.setPlaceholderText("Highlighted Feature")
@@ -69,7 +107,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.treeTimerLabel.setText("Time to create tree: ?")
 
         comboBoxLayout = QtWidgets.QHBoxLayout()
-        comboBoxLayout.addWidget(self.countryFilter)
+        comboBoxLayout.addWidget(self.countryFilterButton)
         comboBoxLayout.addWidget(self.highlightedFeature)
         comboBoxLayout.addWidget(self.dateFilterStart)
         comboBoxLayout.addWidget(self.dateFilterLabel)
