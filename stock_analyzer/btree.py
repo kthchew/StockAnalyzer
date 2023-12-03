@@ -1,4 +1,4 @@
-from stock_analyzer.node import Node
+from stock_analyzer.bnode import Node
 from queue import Queue
 
 
