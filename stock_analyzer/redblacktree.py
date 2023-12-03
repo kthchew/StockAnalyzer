@@ -34,6 +34,7 @@ class RedBlackTree:
     """serves as the helper function that helps locate a given date in the RB Tree"""
     def findHelper(self, node, item):
         if node is None or item == node.item:
+            print(f"Node: {node}, Item: {item}")
             return node
         if item < node.item and node.left:
             return self.findHelper(node.left, item)
@@ -42,42 +43,62 @@ class RedBlackTree:
         else:
             return None
 
-    """main function that executes helper functions and inserts a node into the tree, from here we also 
-    balance the tree color if it's unbalanced (change red to black, etc, and guarantee that the root is black)"""
-    def insert(self, item):
-        newNode = RedBlackNode(item, 1)  # 1 is red
-        self.insertHelper(newNode)
-        self.balanceColor(newNode)
-
     """the insert helper function carries all the functionality of inserting a new node into
     the RB Tree"""
+    def insert(self, key):
+        node = RedBlackNode(key)
+        node.parent = None
+        node.item = key
+        node.left = self.null
+        node.right = self.null
+        node.color = 1
 
-    def insertHelper(self, newNode):
         parent = None
         current = self.root
 
-        while current and current != self.null:
+        while current != self.null:
             parent = current
-            if newNode.item < current.item:
+            if node.item < current.item:
                 current = current.left
             else:
                 current = current.right
 
-        newNode.parent = parent
+        node.parent = parent
         if parent is None:
-            self.root = newNode
-        elif parent and newNode.item < parent.item:
-            parent.left = newNode
-        elif parent:
-            parent.right = newNode
+            self.root = node
+        elif parent and node.item < parent.item:
+            parent.left = node
+        else:
+            parent.right = node
 
-        newNode.left = self.null
-        newNode.right = self.null
+        if node.parent == None:
+            node.color = 0
+            return
+        if node.parent.parent == None:
+            return
 
-    def balanceColor(self, node):
+        self.balanceTree(node)
+
+    def balanceTree(self, node):
+        self.root.color = 0
         while node.parent and node.parent.color == 1:
             if node.parent == node.parent.parent.left:
+                nodeUncle = node.parent.parent.left
+                if nodeUncle and nodeUncle.color == 1:
+                    node.parent.color = 0
+                    nodeUncle.color = 0
+                    node.parent.parent.color = 1
+                    node = node.parent.parent
 
+                else:
+                    if node == node.parent.left:
+                        node = node.parent
+                        self.rotateRight(node)
+
+                    node.parent.color = 0
+                    node.parent.parent.color = 1
+                    self.rotateLeft(node.parent.parent)
+            else:
                 nodeUncle = node.parent.parent.right
                 if nodeUncle and nodeUncle.color == 1:
                     node.parent.color = 0
@@ -93,70 +114,52 @@ class RedBlackTree:
                     node.parent.color = 0
                     node.parent.parent.color = 1
                     self.rotateRight(node.parent.parent)
-            else:
-                nodeUncle = node.parent.parent.left
-                if nodeUncle and nodeUncle.color == 1:
-                    node.parent.color = 0
-                    nodeUncle.color = 0
-                    node.parent.parent.color = 1
-                    node = node.parent.parent
+            if node == self.root:
+                break
 
-                else:
-                    if node == node.parent.right:
-                        node = node.parent
-                        self.rotateLeft(node)
-
-                    node.parent.color = 0
-                    node.parent.parent.color = 1
-                    self.rotateRight(node.parent.parent)
-
-        self.root.color = 0 # reset root to black
-
-    def updateParentChildNodes(self, parent, node, child):
-        if parent:
-            if parent.left == node:
-                parent.left = child
-            else:
-                parent.right = child
-
-        if child:
-            child.parent = parent
+        self.root.color = 0                                   # reset root to black
 
     def rotateLeft(self, node):
         rightChild = node.right
+        node.right = rightChild.left
+        if rightChild.left != self.null:
+            rightChild.left.parent = node
 
-        if rightChild:
-            node.right = rightChild.left
-
-            if rightChild.left:
-                rightChild.left.parent = node
-
-            rightChild.left = node
-            rightChild.parent = node.parent
-            node.parent = rightChild
-
-            self.updateParentChildNodes(rightChild.parent, node, rightChild)
-            return rightChild
-
-        return node
+        rightChild.parent = node.parent
+        if node.parent is None:
+            self.root = rightChild
+        elif node == node.parent.left:
+            node.parent.left = rightChild
+        else:
+            node.parent.right = rightChild
+        rightChild.left = node
+        node.parent = rightChild
 
     def rotateRight(self, node):
         leftChild = node.left
+        node.left = leftChild.right
+        if leftChild.right != self.null:
+            leftChild.right.parent = node
 
-        if leftChild:
-            node.left = leftChild.right
+        leftChild.parent = node.parent
+        if node.parent is None:
+            self.root = leftChild
+        elif node == node.parent.right:
+            node.praent.right = leftChild
+        else:
+            node.parent.left = leftChild
+        leftChild.right = node
+        node.parent = leftChild
 
-            if leftChild.right:
-                leftChild.right.parent = node
-
-            leftChild.right = node
-            leftChild.parent = node.parent
-            node.parent = leftChild
-
-            self.updateParentChildNodes(leftChild.parent, node, leftChild)
-            return leftChild
-
-        return node
+    # def rotateLeftRight(self, node):
+    #     node.left = self.rotateLeft(node.left)
+    #     rotatedNode = self.rotateRight(node)
+    #     return rotatedNode
+    #
+    # def rotateRightLeft(self, node):
+    #     node.right = self.rotateRight(node.right)
+    #     rotatedNode = self.rotateLeft(node)
+    #     return rotatedNode
 
     def returnRoot(self):
         return self.root
