@@ -1,4 +1,4 @@
-from redblacknode import RedBlackNode
+from stock_analyzer.redblacknode import RedBlackNode
 
 # 0 is black, 1 is red
 class RedBlackTree:

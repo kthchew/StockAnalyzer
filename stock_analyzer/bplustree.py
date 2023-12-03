@@ -1,4 +1,4 @@
-from bplusnode import Node
+from stock_analyzer.bplusnode import Node
 
 
 class BPlusTree:
