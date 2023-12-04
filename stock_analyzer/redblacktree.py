@@ -15,18 +15,18 @@ class RedBlackTree:
         self.null = RedBlackNode(None, 0)  # inserts black root (0)
         self.root = self.null
 
-    def runDateFilter(self, start_date: time.struct_time, end_date: time.struct_time, function, *args):
+    def runDateFilter(self, startDate: time.struct_time, endDate: time.struct_time, function, *args):
         queue = Queue()
         queue.put(self.root)
         while not queue.empty():
             current: RedBlackNode = queue.get()
             item: MarketDay = current.item
-            if start_date <= item.date <= end_date:
+            if startDate <= item.date <= endDate:
                 function(item, *args)
 
-            if item.date >= start_date and current.left is not None and current.left != self.null:
+            if item.date >= startDate and current.left is not None and current.left != self.null:
                 queue.put(current.left)
-            if item.date <= end_date and current.right is not None and current.left != self.null:
+            if item.date <= endDate and current.right is not None and current.left != self.null:
                 queue.put(current.right)
 
     def insert(self, key):
