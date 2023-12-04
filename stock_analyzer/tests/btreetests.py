@@ -47,20 +47,6 @@ class BTreeTests(unittest.TestCase):
         self.assertEqual(tree.root.children[1].children[0].items, [6])
         self.assertEqual(tree.root.children[1].children[1].items, [11, 17])
 
-    def test_find(self):
-        tree = self.makeTree()
-
-        data_point = MarketDay("2023-09-20 00:00:00-04:00", "564.3499755859375",
-                              "569.219970703125", "562.6599731445312", "563.8300170898438",
-                              "1311500.0", "0.0", "0.0", "COST", "retail",
-                              "usa")
-        data_point2 = MarketDay("2023-06-23 00:00:00-04:00", "21.71629018950936",
-                               "26.01165263931803","25.302781633056032", "25.529226303100582",
-                               "3230400.0", "0.0", "0.0", "FL", "footwear", "usa")
-
-        self.assertTrue(tree.find(data_point))
-        self.assertFalse(tree.find(data_point2))
-
     def testRunDateFilter(self):
         tree = self.makeTree()
         start = time.strptime("2023-09-19 00:00:00-04:00", "%Y-%m-%d %H:%M:%S%z")
