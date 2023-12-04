@@ -65,7 +65,7 @@ class BPlusTree:
             for i in range(current.item_count()):
                 print(current.items[i])
                 
-    def runDateFilter(self, start_date: time.struct_time, end_date: time.struct_time, function, *args):
+        def runDateFilter(self, start_date: time.struct_time, end_date: time.struct_time, function, *args):
         """Runs the provided function on all items between the start and end date.
         The function's first argument is the item in the tree to process. Other arguments provided to this method
         are passed into the provided function."""
@@ -78,7 +78,13 @@ class BPlusTree:
                     break
                 if i == current.item_count()-1:
                     current = current.children[i+1]
+                    
         i = 0
+        for j in range (current.items):
+            if current.items[j].date >= start_date:
+                i = j
+                break
+                
         while current.items[i].date <= end_date:
             function(current.items[i], *args)
             i += 1
