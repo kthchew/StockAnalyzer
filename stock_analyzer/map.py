@@ -97,13 +97,21 @@ class Map:
         self.m.save("index.html")
 
     def nanFunc(self, feat, dicto):
+        maximum = 0.0
+        for item in dicto:
+            if item > maximum:
+                maximum = item
         if dicto.get(feat["properties"]["name"].lower(), -1) != -1:
-            return self.linear(dicto.get(feat["properties"]["name"].lower()))
+            return cm.linear.RdYlGn_11.scale(0.0, maximum)(dicto.get(feat["properties"]["name"].lower()))
         else:
             return "#D3D3D3"
 
     def nanFuncStep(self, feat, dicto):
+        maximum = 0.0
+        for item in dicto:
+            if item > maximum:
+                maximum = item
         if dicto.get(feat["properties"]["name"].lower(), -1) != -1:
-            return self.linear(dicto.get(feat["properties"]["name"].lower()))
+            return self.step(dicto.get(feat["properties"]["name"].lower()))
         else:
             return "#D3D3D3"
