@@ -22,9 +22,9 @@ class RedBlackTree:
             if start_date <= item.date <= end_date:
                 function(item, *args)
 
-            if item.date >= start_date and current.left is not None:
+            if item.date >= start_date and current.left is not None and current.left != self.null:
                 queue.put(current.left)
-            if item.date <= end_date and current.right is not None:
+            if item.date <= end_date and current.right is not None and current.left != self.null:
                 queue.put(current.right)
 
     def calculateTradingVolumes(self, dateStart, dateEnd):
