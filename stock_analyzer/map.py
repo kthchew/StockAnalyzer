@@ -89,7 +89,10 @@ class Map:
         for item in dicto:
             if dicto[item] > maximum:
                 maximum = dicto[item]
-        if dicto.get(feat["properties"]["name"].lower(), -1) != -1:
+        temp = feat["properties"]["name"]
+        if temp == "United States of America":
+            temp == "usa"
+        if dicto.get(temp.lower(), -1) != -1:
             return cm.linear.RdYlGn_11.scale(0.0, maximum)(dicto.get(feat["properties"]["name"].lower()))
         else:
             return "#D3D3D3"
@@ -99,7 +102,10 @@ class Map:
         for item in dicto:
             if dicto[item] > maximum:
                 maximum = dicto[item]
-        if dicto.get(feat["properties"]["name"].lower(), -1) != -1:
+        temp = feat["properties"]["name"]
+        if temp == "United States of America":
+            temp == "usa"
+        if dicto.get(temp.lower(), -1) != -1:
             return cm.linear.RdYlGn_11.to_step(12).scale(0.0, maximum)(dicto.get(feat["properties"]["name"].lower()))
         else:
             return "#D3D3D3"
