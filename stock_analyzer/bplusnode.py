@@ -61,7 +61,7 @@ class Node:
     def splitChild(self, index):
         """Split the indexth child (starting at 0) into two children, and makes a copy of the middle
         element in that child in the current node."""
-        left, middle, right = self.children[index].split_node()
+        left, middle, right = self.children[index].splitNode()
         right.nextLeaf = self.children[index].nextLeaf
         self.children[index].items = left.items
         self.children[index].children = left.children
