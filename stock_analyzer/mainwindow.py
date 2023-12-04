@@ -175,7 +175,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.tree.insert(dataPoint)
 
         self.makeMapButton.setEnabled(True)
-        self.tree.printTree()
 
     def timeCreateMap(self):
         start = time.time()
