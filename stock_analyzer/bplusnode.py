@@ -67,4 +67,4 @@ class Node:
         self.children[index].children = left.children
         self.children[index].nextLeaf = right
         self.children.insert(index + 1, right)
-        self.add_item(middle)
+        self.addItem(middle)
