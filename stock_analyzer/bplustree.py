@@ -60,6 +60,6 @@ class BPlusTree:
         while current.items[i].date <= endDate:
             function(current.items[i], *args)
             i += 1
-            if i == self.L:
+            if i >= current.itemCount():
                 i = 0
                 current = current.nextLeaf
