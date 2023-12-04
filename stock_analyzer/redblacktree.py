@@ -29,40 +29,6 @@ class RedBlackTree:
             if item.date <= end_date and current.right is not None and current.left != self.null:
                 queue.put(current.right)
 
-    def calculateTradingVolumes(self, dateStart, dateEnd):
-        result = {}
-        self.calculateTradingVolumesHelper(self.root, dateStart, dateEnd, result)
-        return result
-
-    def calculateTradingVolumesHelper(self, node, dateStart, dateEnd, result):
-        if node == self.null:
-            return
-
-        # checking to see here if the date is within the range add it
-        if dateStart <= node.item.date <= dateEnd:
-            country = node.item.country
-            result[country] = result.get(country, 0.0) + node.item.vol
-
-        self.calculateTradingVolumesHelper(node.left, dateStart, dateEnd, result)
-        self.calculateTradingVolumesHelper(node.right, dateStart, dateEnd, result)
-        #  calculates the left and right subtrees
-
-    def find(self, item):
-        """executes the find function that locates the date within the RB tree"""
-        return self.findHelper(self.root, item)
-
-    def findHelper(self, node, item):
-        """serves as the helper function that helps locate a given date in the RB Tree"""
-        if node is None or item == node.item:
-            print(f"Node: {node}, Item: {item}")
-            return node
-        if item < node.item and node.left:
-            return self.findHelper(node.left, item)
-        elif item > node.item and node.right:
-            return self.findHelper(node.right, item)
-        else:
-            return None
-
     def insert(self, key):
         """the insert helper function carries all the functionality of inserting a new node into
     the RB Tree"""
