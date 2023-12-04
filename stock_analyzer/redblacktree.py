@@ -145,7 +145,7 @@ class RedBlackTree:
         if node.parent is None:
             self.root = leftChild
         elif node == node.parent.right:
-            node.praent.right = leftChild
+            node.parent.right = leftChild
         else:
             node.parent.left = leftChild
         leftChild.right = node
