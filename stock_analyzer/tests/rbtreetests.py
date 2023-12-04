@@ -1,8 +1,8 @@
 import csv
 import unittest
 
-from redblacktree import RedBlackTree
-from marketday import MarketDay
+from stock_analyzer.redblacktree import RedBlackTree
+from stock_analyzer.marketday import MarketDay
 
 class RBTreeTests(unittest.TestCase):
     def testBasicInsertions(self):

@@ -139,7 +139,3 @@ class RedBlackTree:
 
     def returnRoot(self):
         return self.root
-
-    # def calculateTradingVolume(self, dateStart, dateEnd):
-
-
