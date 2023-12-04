@@ -54,7 +54,7 @@ class Map:
                                        zoom_on_click=True,
                                        ).add_to(self.m)
 
-        self.geoJson3 = folium.GeoJson(self.geojson_data,
+       """ self.geoJson3 = folium.GeoJson(self.geojson_data,
                                        style_function=lambda feature: {
                                            "fillColor": self.nanFunc(feature),
                                            "fillOpacity": 0.5,
@@ -70,7 +70,7 @@ class Map:
                                        highlight=True,
                                        show=False,
                                        zoom_on_click=True,
-                                       ).add_to(self.m)
+                                       ).add_to(self.m)"""
 
         self.geoJson4 = folium.GeoJson(self.geojson_data,
                                        style_function=lambda feature: {
