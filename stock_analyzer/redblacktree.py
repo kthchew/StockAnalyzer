@@ -1,37 +1,51 @@
-import time
-from queue import Queue
-
-from stock_analyzer.redblacknode import RedBlackNode
-from stock_analyzer.marketday import MarketDay
-
+from redblacknode import RedBlackNode
+from marketday import MarketDay
 
 # 0 is black, 1 is red
 class RedBlackTree:
     """This class is a representation of a red black tree. Here we initialize the RB Tree, and create a special
      node where we assign it to null and 0 represents the color of the node. We also set root to be equal to the
-     null node."""
-
+     null node """
     def __init__(self):
-        self.null = RedBlackNode(None, 0)  # inserts black root (0)
+        self.null = RedBlackNode(None, 0) # inserts black root (0)
         self.root = self.null
 
-    def runDateFilter(self, startDate: time.struct_time, endDate: time.struct_time, function, *args):
-        queue = Queue()
-        queue.put(self.root)
-        while not queue.empty():
-            current: RedBlackNode = queue.get()
-            item: MarketDay = current.item
-            if startDate <= item.date <= endDate:
-                function(item, *args)
+    def calculateTradingVolumes(self, dateStart, dateEnd):
+        result = {}
+        self.calculateTradingVolumesHelper(self.root, dateStart, dateEnd, result)
+        return result
 
-            if item.date >= startDate and current.left is not None and current.left != self.null:
-                queue.put(current.left)
-            if item.date <= endDate and current.right is not None and current.left != self.null:
-                queue.put(current.right)
+    def calculateTradingVolumesHelper(self, node, dateStart, dateEnd, result):
+        if node == self.null:
+            return
 
-    def insert(self, key):
-        """the insert helper function carries all the functionality of inserting a new node into
+        """checking to see here if the date is within the range add it"""
+        if dateStart <= node.item.date <= dateEnd:
+            country = node.item.country
+            result[country] = result.get(country, 0.0) + node.item.vol
+
+        self.calculateTradingVolumesHelper(node.left, dateStart, dateEnd, result)
+        self.calculateTradingVolumesHelper(node.right, dateStart, dateEnd, result)
+        #  calculates the left and right subtrees
+    """executes the find function that locates the date within the RB tree"""
+    def find(self, item):
+        return self.findHelper(self.root, item)
+
+    """serves as the helper function that helps locate a given date in the RB Tree"""
+    def findHelper(self, node, item):
+        if node is None or item == node.item:
+            print(f"Node: {node}, Item: {item}")
+            return node
+        if item < node.item and node.left:
+            return self.findHelper(node.left, item)
+        elif item > node.item and node.right:
+            return self.findHelper(node.right, item)
+        else:
+            return None
+
+    """the insert helper function carries all the functionality of inserting a new node into
     the RB Tree"""
+    def insert(self, key):
         node = RedBlackNode(key)
         node.parent = None
         node.item = key
@@ -57,10 +71,10 @@ class RedBlackTree:
         else:
             parent.right = node
 
-        if node.parent is None:
+        if node.parent == None:
             node.color = 0
             return
-        if node.parent.parent is None:
+        if node.parent.parent == None:
             return
 
         self.balanceTree(node)
@@ -131,7 +145,7 @@ class RedBlackTree:
         if node.parent is None:
             self.root = leftChild
         elif node == node.parent.right:
-            node.parent.right = leftChild
+            node.praent.right = leftChild
         else:
             node.parent.left = leftChild
         leftChild.right = node
@@ -139,3 +153,7 @@ class RedBlackTree:
 
     def returnRoot(self):
         return self.root
+
+    # def calculateTradingVolume(self, dateStart, dateEnd):
+
+
