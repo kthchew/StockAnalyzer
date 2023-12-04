@@ -16,7 +16,7 @@ class Map:
         self.geojson_data = requests.get(
             "https://raw.githubusercontent.com/python-visualization/folium-example-data/main/world_countries.json"
         ).json()
-        self.dict = dicto
+        self.dicto = dicto
         self.geoJson1 = folium.GeoJson(self.geojson_data,
                                        style_function=lambda feature: {
                                            "fillColor": self.nanFunc(feature, self.dicto),
@@ -99,11 +99,9 @@ class Map:
             return self.linear(self.dicto.get(feat["properties"]["name"].lower()))
         else:
             return "#D3D3D3"
-        
-        
+
     def nanFuncStep(self, feat):
         if self.dicto.get(feat["properties"]["name"].lower(), -1) != -1:
             return self.linear(self.dicto.get(feat["properties"]["name"].lower()))
         else:
             return "#D3D3D3"
-        
