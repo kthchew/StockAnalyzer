@@ -1,4 +1,5 @@
 from stock_analyzer.bplusnode import Node
+import time
 
 
 class BPlusTree:
@@ -65,7 +66,7 @@ class BPlusTree:
             for i in range(current.item_count()):
                 print(current.items[i])
                 
-        def runDateFilter(self, start_date: time.struct_time, end_date: time.struct_time, function, *args):
+    def runDateFilter(self, start_date: time.struct_time, end_date: time.struct_time, function, *args):
         """Runs the provided function on all items between the start and end date.
         The function's first argument is the item in the tree to process. Other arguments provided to this method
         are passed into the provided function."""
