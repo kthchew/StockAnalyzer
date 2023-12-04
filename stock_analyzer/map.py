@@ -5,12 +5,11 @@ import branca
 import branca.colormap as cm
 
 
-def nanFunc(feat, Dict):
-
-    if Dict.get(feat["properties"]["name"].lower(), -1) != -1:
-        return linear(Dict[feat["properties"]["name"].lower()])
+def nanFunc(feat, Dicto):
+    if Dicto.get(feat["properties"]["name"].lower(), -1) != -1:
+        return linear(Dicto.get(feat["properties"]["name"].lower()))
     else:
-        return "white"
+        return "#D3D3D3"
 
 
 linear = cm.linear.Spectral_07
@@ -27,16 +26,16 @@ geojson_data = requests.get(
     "https://raw.githubusercontent.com/python-visualization/folium-example-data/main/world_countries.json"
 ).json()
 
-Dict = {"france": .05, "usa": .2, "japan": .9}
+# Temporary Dictionary
+Dict = {"france": .2, "united states of america": .5, "japan": .9}
 
 geoJson1 = folium.GeoJson(geojson_data,
                           style_function=lambda feature: {
                               "fillColor": nanFunc(feature, Dict),
+                              "fillOpacity": 0.6,
                               "color": "black",
                               "weight": 2,
                               "dashArray": "5, 5",
-                              "nan_fill_color": "white",
-                              "nan_fill_opacity": 0.4,
                           },
                           highlight_function=lambda feature: {
                               "color": "black",
@@ -55,8 +54,6 @@ geoJson2 = folium.GeoJson(geojson_data,
                               "color": "black",
                               "weight": 2,
                               "dashArray": "5, 5",
-                              "nan_fill_color": "white",
-                              "nan_fill_opacity": 0.4,
                           },
                           highlight_function=lambda feature: {
                               "color": "black",
@@ -74,8 +71,6 @@ geoJson3 = folium.GeoJson(geojson_data,
                               "color": "black",
                               "weight": 2,
                               "dashArray": "5, 5",
-                              "nan_fill_color": "white",
-                              "nan_fill_opacity": 0.4,
                           },
                           highlight_function=lambda feature: {
                               "color": "black",
@@ -93,8 +88,6 @@ geoJson4 = folium.GeoJson(geojson_data,
                               "color": "black",
                               "weight": 2,
                               "dashArray": "5, 5",
-                              "nan_fill_color": "white",
-                              "nan_fill_opacity": 0.4,
                           },
                           highlight_function=lambda feature: {
                               "color": "black",
