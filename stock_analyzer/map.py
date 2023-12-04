@@ -5,8 +5,8 @@ import branca.colormap as cm
 
 class Map:
     def __init__(self, dicto):
-        self.linear = cm.linear.Spectral_07
-        self.step = cm.linear.Spectral_07.to_step(12)
+        self.linear = cm.linear.RdYlGn_11
+        self.step = cm.linear.RdYlGn_11.to_step(12)
         self.m = folium.Map(tiles=folium.TileLayer(name="World Map", no_wrap=True),
                             zoom_control=True,
                             control_scale=True,
