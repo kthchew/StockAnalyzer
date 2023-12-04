@@ -186,6 +186,7 @@ class MainWindow(QtWidgets.QMainWindow):
         return "index.html"
 
     def calculateStats(self, dateStart, dateEnd):
+        """Returns total volumes, average high, average low for each country in a dictionary."""
         volumes = dict()
         highs = dict()
         lows = dict()
@@ -207,3 +208,4 @@ class MainWindow(QtWidgets.QMainWindow):
             highs[key] /= count[0]
         for key, _ in lows:
             lows[key] /= count[0]
+        return volumes, highs, lows
