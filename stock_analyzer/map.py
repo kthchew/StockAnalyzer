@@ -19,7 +19,7 @@ class Map:
         self.dicto = dicto
         self.geoJson1 = folium.GeoJson(self.geojson_data,
                                        style_function=lambda feature: {
-                                           "fillColor": self.nanFunc(feature, self.dicto),
+                                           "fillColor": self.nanFunc(feature),
                                            "fillOpacity": 0.5,
                                            "color": "black",
                                            "weight": 2,
@@ -38,7 +38,7 @@ class Map:
 
         self.geoJson2 = folium.GeoJson(self.geojson_data,
                                        style_function=lambda feature: {
-                                           "fillColor": self.nanFunc(feature, self.dicto),
+                                           "fillColor": self.nanFunc(feature),
                                            "fillOpacity": 0.5,
                                            "color": "black",
                                            "weight": 2,
@@ -56,7 +56,7 @@ class Map:
 
         self.geoJson3 = folium.GeoJson(self.geojson_data,
                                        style_function=lambda feature: {
-                                           "fillColor": self.nanFunc(feature, self.dicto),
+                                           "fillColor": self.nanFunc(feature),
                                            "fillOpacity": 0.5,
                                            "color": "black",
                                            "weight": 2,
@@ -74,7 +74,7 @@ class Map:
 
         self.geoJson4 = folium.GeoJson(self.geojson_data,
                                        style_function=lambda feature: {
-                                           "fillColor": self.nanFuncStep(feature, self.dicto),
+                                           "fillColor": self.nanFuncStep(feature),
                                            "fillOpacity": 0.5,
                                            "color": "black",
                                            "weight": 2,
