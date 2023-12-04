@@ -50,6 +50,9 @@ class BPlusTree:
                     break
                 if i == current.itemCount() - 1:
                     current = current.children[i + 1]
+            else:
+                if current.itemCount() == 0:
+                    current = current.children[0]
 
         i = 0
         for j in range(current.itemCount()):
