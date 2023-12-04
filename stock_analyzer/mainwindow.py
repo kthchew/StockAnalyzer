@@ -17,7 +17,6 @@ class CountryAction(QtWidgets.QWidgetAction):
                 self.parent().selectedCountries.clear()
                 for item in self.parent().children():
                     item.setChecked(False)
-            print(self.parent().selectedCountries)
             return
 
         if self.text().lower() in self.parent().selectedCountries:
