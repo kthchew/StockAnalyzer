@@ -1,5 +1,8 @@
-from redblacknode import RedBlackNode
-from marketday import MarketDay
+import time
+from queue import Queue
+
+from stock_analyzer.redblacknode import RedBlackNode
+from stock_analyzer.marketday import MarketDay
 
 # 0 is black, 1 is red
 class RedBlackTree:
@@ -9,6 +12,20 @@ class RedBlackTree:
     def __init__(self):
         self.null = RedBlackNode(None, 0) # inserts black root (0)
         self.root = self.null
+
+    def runDateFilter(self, start_date: time.struct_time, end_date: time.struct_time, function, *args):
+        queue = Queue()
+        queue.put(self.root)
+        while not queue.empty():
+            current: RedBlackNode = queue.get()
+            item: MarketDay = current.item
+            if start_date <= item.date <= end_date:
+                function(item, *args)
+
+            if item.date >= start_date and current.left is not None:
+                queue.put(current.left)
+            if item.date <= end_date and current.right is not None:
+                queue.put(current.right)
 
     def calculateTradingVolumes(self, dateStart, dateEnd):
         result = {}
