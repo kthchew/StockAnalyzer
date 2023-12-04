@@ -62,8 +62,9 @@ class Node:
         """Split the indexth child (starting at 0) into two children, and makes a copy of the middle
         element in that child in the current node."""
         left, middle, right = self.children[index].split_node()
-        left.nextLeaf = right
         right.nextLeaf = self.children[index].nextLeaf
-        self.children[index] = left
+        self.children[index].items = left.items
+        self.children[index].children = left.children
+        self.children[index].nextLeaf = right
         self.children.insert(index + 1, right)
-        self.addItem(middle)
+        self.add_item(middle)
