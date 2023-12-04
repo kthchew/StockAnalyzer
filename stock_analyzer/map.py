@@ -99,18 +99,18 @@ class Map:
     def nanFunc(self, feat, dicto):
         maximum = 0.0
         for item in dicto:
-            if item > maximum:
-                maximum = item
+            if dicto[item] > maximum:
+                maximum = dicto[item]
         if dicto.get(feat["properties"]["name"].lower(), -1) != -1:
             return cm.linear.RdYlGn_11.scale(0.0, maximum)(dicto.get(feat["properties"]["name"].lower()))
         else:
             return "#D3D3D3"
 
-        def nanFuncStep(self, feat, dicto):
+    def nanFuncStep(self, feat, dicto):
         maximum = 0.0
         for item in dicto:
-            if item > maximum:
-                maximum = item
+            if dicto[item] > maximum:
+                maximum = dicto[item]
         if dicto.get(feat["properties"]["name"].lower(), -1) != -1:
             return cm.linear.RdYlGn_11.to_step(12).scale(0.0, maximum)(dicto.get(feat["properties"]["name"].lower()))
         else:
