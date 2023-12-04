@@ -60,7 +60,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.highlightedFeature = QtWidgets.QComboBox()
         self.highlightedFeature.setPlaceholderText("Highlighted Feature")
-        self.highlightedFeature.addItems(["Trading Volume", "Gains/Losses"])
+        self.highlightedFeature.addItems(["Highs (Average)", "Lows (Average)", "Trading Volume (Total)"])
+        self.featureError = QtWidgets.QErrorMessage()
+        self.featureError.setWindowTitle("No Feature Selected")
 
         self.dateFilterStart = QtWidgets.QDateEdit(QtCore.QDate(2022, 1, 1))
 
@@ -177,6 +179,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.makeMapButton.setEnabled(True)
 
     def timeCreateMap(self):
+        if self.highlightedFeature.currentIndex() == -1:
+            self.featureError.showMessage("Please select a feature before building the map.")
+            return
+
         start = time.time()
         url = self.createMap()
         self.loadMap(url)
@@ -187,7 +193,7 @@ class MainWindow(QtWidgets.QMainWindow):
         startDate = self.dateFilterStart.date().toPython().timetuple()
         endDate = self.dateFilterEnd.date().toPython().timetuple()
         vols, highs, lows = self.calculateStats(startDate, endDate)
-        Map(highs, lows, vols)
+        Map(highs, lows, vols, self.highlightedFeature.currentIndex())
         return "index.html"
 
     def calculateStats(self, dateStart, dateEnd):
@@ -197,7 +203,9 @@ class MainWindow(QtWidgets.QMainWindow):
         lows = dict()
         count = [0]
 
-        def updateVolume(item, vols: dict, his: dict, los: dict, count: list):
+        def updateVolume(item, vols: dict, his: dict, los: dict, count: list, countries: set):
+            if item.country not in countries:
+                return
             count[0] += 1
             if item.country in vols.keys():
                 vols[item.country] += item.vol
@@ -208,7 +216,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 his[item.country] = item.high
                 los[item.country] = item.low
 
-        self.tree.runDateFilter(dateStart, dateEnd, updateVolume, volumes, highs, lows, count)
+        self.tree.runDateFilter(dateStart, dateEnd, updateVolume, volumes, highs, lows, count, self.countryFilter.selectedCountries)
         for key in highs:
             highs[key] /= count[0]
         for key in lows:
