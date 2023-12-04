@@ -17,23 +17,23 @@ class BTree:
         """Insert the provided item in the tree. Nodes are automatically split if necessary."""
         path = []
         current: Node = self.root
-        while not current.is_leaf():
-            next_index = 0
-            for i in range(current.item_count()):
+        while not current.isLeaf():
+            nextIndex = 0
+            for i in range(current.itemCount()):
                 if item > current.items[i]:
-                    next_index += 1
+                    nextIndex += 1
                 else:
                     break
-            path.append((current, next_index))
-            current = current.children[next_index]
+            path.append((current, nextIndex))
+            current = current.children[nextIndex]
 
-        current.add_item(item)
+        current.addItem(item)
         for node, child in reversed(path):
-            child_node = node.children[child]
-            if child_node.item_count() > self.l or child_node.child_count() > self.n:
-                node.split_child(child)
-        if self.root.item_count() > self.l:
-            left, mid, right = self.root.split_node()
+            childNode = node.children[child]
+            if childNode.itemCount() > self.l or childNode.childCount() > self.n:
+                node.splitChild(child)
+        if self.root.itemCount() > self.l:
+            left, mid, right = self.root.splitNode()
             mid = Node([mid], [left, right])
             self.root = mid
 
@@ -43,19 +43,31 @@ class BTree:
         queue.put(self.root)
         while not queue.empty():
             current = queue.get()
-            for i in range(current.item_count()):
+            for i in range(current.itemCount()):
                 if item == current.items[i]:
                     return True
 
-                if i == 0 and item <= current.items[i] and not current.is_leaf():
+                if i == 0 and item <= current.items[i] and not current.isLeaf():
                     queue.put(current.children[i])
-                if item >= current.items[i] and not current.is_leaf():
+                if item >= current.items[i] and not current.isLeaf():
                     queue.put(current.children[i + 1])
                 else:
                     break
         return False
 
-    def runDateFilter(self, start_date: time.struct_time, end_date: time.struct_time, function, *args):
+    def printTree(self):
+        """Return True if the item is found in the tree, False otherwise."""
+        queue = Queue()
+        queue.put(self.root)
+        total = 0
+        while not queue.empty():
+            current = queue.get()
+            total += current.itemCount()
+            for child in current.children:
+                queue.put(child)
+        print(total)
+
+    def runDateFilter(self, startDate: time.struct_time, endDate: time.struct_time, function, *args):
         """Runs the provided function on all items between the start and end date.
         The function's first argument is the item in the tree to process. Other arguments provided to this method
         are passed into the provided function."""
@@ -63,16 +75,16 @@ class BTree:
         queue.put(self.root)
         while not queue.empty():
             current: Node = queue.get()
-            for i in range(current.item_count()):
+            for i in range(current.itemCount()):
                 item = current.items[i]
 
-                if start_date <= item.date <= end_date:
+                if startDate <= item.date <= endDate:
                     function(item, *args)
 
                 # things to the left have an older date, so check this is at least the start date (if not, then useful
                 # items can't possibly be to the left)
                 # similar logic with searching to the right
-                if i == 0 and item.date >= start_date and not current.is_leaf():
+                if i == 0 and item.date >= startDate and not current.isLeaf():
                     queue.put(current.children[i])
-                if item.date <= end_date and not current.is_leaf():
+                if item.date <= endDate and not current.isLeaf():
                     queue.put(current.children[i + 1])
