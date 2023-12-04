@@ -81,7 +81,7 @@ class BPlusTree:
                     current = current.children[i+1]
                     
         i = 0
-        for j in range(current.items):
+        for j in range(current.item_count()):
             if current.items[j].date >= start_date:
                 i = j
                 break
