@@ -1,13 +1,9 @@
-import csv
 import time
 
 from PySide6 import QtCore, QtWidgets, QtWebEngineWidgets
 
 from stock_analyzer.map import Map
-from stock_analyzer.bplustree import BPlusTree
-from stock_analyzer.btree import BTree
-from stock_analyzer.marketday import MarketDay
-from stock_analyzer.redblacktree import RedBlackTree
+from stock_analyzer.treeworker import TreeWorker
 
 
 class CountryAction(QtWidgets.QWidgetAction):
@@ -92,7 +88,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.lVal.setPrefix("Max Items Per Node: ")
 
         self.makeTreeButton = QtWidgets.QPushButton("Build Tree")
-        self.makeTreeButton.clicked.connect(self.timeCreateTree)
+        self.makeTreeButton.clicked.connect(self.startCreateTree)
 
         self.makeMapButton = QtWidgets.QPushButton("Build Map")
         self.makeMapButton.clicked.connect(self.timeCreateMap)
@@ -102,6 +98,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.loadMap("intro.html")
         self.webMapView.setSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding,
                                       QtWidgets.QSizePolicy.Policy.MinimumExpanding)
+
+        self.loadingLabel = QtWidgets.QLabel()
+        self.loadingLabel.setText("Please wait, making tree...")
+        self.loadingLabel.setVisible(False)
 
         self.mapTimerLabel = QtWidgets.QLabel()
         self.mapTimerLabel.setText("Time to create map: ?")
@@ -128,6 +128,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         bottomLayout = QtWidgets.QHBoxLayout()
         spacer = QtWidgets.QSpacerItem(0, 0, QtWidgets.QSizePolicy.Policy.MinimumExpanding)
+        bottomLayout.addWidget(self.loadingLabel)
         bottomLayout.addSpacerItem(spacer)
         bottomLayout.addWidget(self.mapTimerLabel)
         bottomLayout.addWidget(self.treeTimerLabel)
@@ -143,40 +144,36 @@ class MainWindow(QtWidgets.QMainWindow):
         self.container.setLayout(self.layout)
         self.setCentralWidget(self.container)
 
+        self.threadpool = QtCore.QThreadPool()
+
     def loadMap(self, fileName):
         with open(fileName, 'r') as file:
             data = file.read()
         self.webMapView.setHtml(data)
 
-    def timeCreateTree(self):
-        """Times the tree creation and adds the time in seconds to the UI."""
-        start = time.time()
-        self.createTree()
-        end = time.time()
+    def endCreateTree(self, start: float, end: float):
+        """
+        Responds when the background thread finishes creating the tree. Updates the UI to show the time it took.
+        :param start: The start time
+        :param end: The end time
+        :return: None
+        """
         self.treeTimerLabel.setText("Time to create tree: " + str(round(end - start, 2)) + " sec")
-
-    def createTree(self):
-        match self.dataStructure.currentIndex():
-            case 0:
-                self.tree = BTree(self.nVal.value(), self.lVal.value())
-            case 1:
-                self.tree = BPlusTree(self.nVal.value(), self.lVal.value())
-            case 2:
-                self.tree = RedBlackTree()
-            case _:
-                return
-
-        with open("data.csv") as file:
-            reader = csv.reader(file)
-            for r in reader:
-                # skip header row
-                if r[0] == "Date":
-                    continue
-                # column brand name is skipped
-                dataPoint = MarketDay(r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[9], r[10], r[11])
-                self.tree.insert(dataPoint)
-
         self.makeMapButton.setEnabled(True)
+        self.makeTreeButton.setEnabled(True)
+        self.loadingLabel.setVisible(False)
+
+    def startCreateTree(self):
+        """
+        Begins a new thread to create the tree.
+        :return: None
+        """
+        self.makeMapButton.setDisabled(True)
+        self.makeTreeButton.setDisabled(True)
+        self.loadingLabel.setVisible(True)
+        treeWorker = TreeWorker(self)
+        treeWorker.signals.treeCreated.connect(self.endCreateTree)
+        self.threadpool.start(treeWorker)
 
     def timeCreateMap(self):
         if self.highlightedFeature.currentIndex() == -1:
