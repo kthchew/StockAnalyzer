@@ -173,6 +173,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.tree.insert(dataPoint)
 
         self.makeMapButton.setEnabled(True)
+        self.tree.printTree()
 
     def timeCreateMap(self):
         start = time.time()
@@ -182,7 +183,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mapTimerLabel.setText("Time to create map: " + str(round(end - start, 2)) + " sec")
 
     def createMap(self):
-        m = Map({"canada": 100.1, "france": 2.3})
+        startDate = self.dateFilterStart.date().toPython().timetuple()
+        endDate = self.dateFilterEnd.date().toPython().timetuple()
+        vols, highs, lows = self.calculateStats(startDate, endDate)
+        Map(highs, lows, vols)
         return "index.html"
 
     def calculateStats(self, dateStart, dateEnd):
@@ -197,15 +201,15 @@ class MainWindow(QtWidgets.QMainWindow):
             if item.country in vols.keys():
                 vols[item.country] += item.vol
                 his[item.country] += item.high
-                los[item.country] += item.los
+                los[item.country] += item.low
             else:
                 vols[item.country] = item.vol
                 his[item.country] = item.high
-                los[item.country] = item.los
+                los[item.country] = item.low
 
         self.tree.runDateFilter(dateStart, dateEnd, updateVolume, volumes, highs, lows, count)
-        for key, _ in highs:
+        for key in highs:
             highs[key] /= count[0]
-        for key, _ in lows:
+        for key in lows:
             lows[key] /= count[0]
         return volumes, highs, lows
