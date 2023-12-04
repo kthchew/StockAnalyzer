@@ -3,7 +3,7 @@ import time
 
 from PySide6 import QtCore, QtWidgets, QtWebEngineWidgets
 
-from stock_analyzer.map import testMap
+from stock_analyzer.map import Map
 from stock_analyzer.bplustree import BPlusTree
 from stock_analyzer.btree import BTree
 from stock_analyzer.marketday import MarketDay
@@ -182,5 +182,28 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mapTimerLabel.setText("Time to create map: " + str(round(end - start, 2)) + " sec")
 
     def createMap(self):
-        testMap()
-        return "output_map.html"
+        m = Map({"canada": 100.1, "france": 2.3})
+        return "index.html"
+
+    def calculateStats(self, dateStart, dateEnd):
+        volumes = dict()
+        highs = dict()
+        lows = dict()
+        count = [0]
+
+        def updateVolume(item, vols: dict, his: dict, los: dict, count: list):
+            count[0] += 1
+            if item.country in vols.keys():
+                vols[item.country] += item.vol
+                his[item.country] += item.high
+                los[item.country] += item.los
+            else:
+                vols[item.country] = item.vol
+                his[item.country] = item.high
+                los[item.country] = item.los
+
+        self.tree.runDateFilter(dateStart, dateEnd, updateVolume, volumes, highs, lows, count)
+        for key, _ in highs:
+            highs[key] /= count[0]
+        for key, _ in lows:
+            lows[key] /= count[0]
