@@ -29,6 +29,7 @@ class CountryAction(QtWidgets.QWidgetAction):
         else:
             self.parent().selectedCountries.add(self.text().lower())
 
+
 class MainWindow(QtWidgets.QMainWindow):
     def __init__(self):
         super().__init__()
@@ -97,7 +98,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         self.webMapView = QtWebEngineWidgets.QWebEngineView()
         self.loadMap("intro.html")
-        self.webMapView.setSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding, QtWidgets.QSizePolicy.Policy.MinimumExpanding)
+        self.webMapView.setSizePolicy(QtWidgets.QSizePolicy.Policy.MinimumExpanding,
+                                      QtWidgets.QSizePolicy.Policy.MinimumExpanding)
 
         self.mapTimerLabel = QtWidgets.QLabel()
         self.mapTimerLabel.setText("Time to create map: ?")

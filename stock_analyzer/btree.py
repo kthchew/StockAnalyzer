@@ -7,6 +7,7 @@ from queue import Queue
 class BTree:
     """A class representing a B tree. n is the maximum number of children a node can have,
     l is the maximum number of items a node can have."""
+
     def __init__(self, n, l):
         self.n = n
         self.l = l
@@ -69,7 +70,7 @@ class BTree:
                     function(item, *args)
 
                 # things to the left have an older date, so check this is at least the start date (if not, then useful
-                # items can't possibly be to the left
+                # items can't possibly be to the left)
                 # similar logic with searching to the right
                 if i == 0 and item.date >= start_date and not current.is_leaf():
                     queue.put(current.children[i])

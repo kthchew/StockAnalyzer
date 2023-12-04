@@ -4,13 +4,15 @@ from queue import Queue
 from stock_analyzer.redblacknode import RedBlackNode
 from stock_analyzer.marketday import MarketDay
 
+
 # 0 is black, 1 is red
 class RedBlackTree:
     """This class is a representation of a red black tree. Here we initialize the RB Tree, and create a special
      node where we assign it to null and 0 represents the color of the node. We also set root to be equal to the
-     null node """
+     null node."""
+
     def __init__(self):
-        self.null = RedBlackNode(None, 0) # inserts black root (0)
+        self.null = RedBlackNode(None, 0)  # inserts black root (0)
         self.root = self.null
 
     def runDateFilter(self, start_date: time.struct_time, end_date: time.struct_time, function, *args):
@@ -36,7 +38,7 @@ class RedBlackTree:
         if node == self.null:
             return
 
-        """checking to see here if the date is within the range add it"""
+        # checking to see here if the date is within the range add it
         if dateStart <= node.item.date <= dateEnd:
             country = node.item.country
             result[country] = result.get(country, 0.0) + node.item.vol
@@ -44,12 +46,13 @@ class RedBlackTree:
         self.calculateTradingVolumesHelper(node.left, dateStart, dateEnd, result)
         self.calculateTradingVolumesHelper(node.right, dateStart, dateEnd, result)
         #  calculates the left and right subtrees
-    """executes the find function that locates the date within the RB tree"""
+
     def find(self, item):
+        """executes the find function that locates the date within the RB tree"""
         return self.findHelper(self.root, item)
 
-    """serves as the helper function that helps locate a given date in the RB Tree"""
     def findHelper(self, node, item):
+        """serves as the helper function that helps locate a given date in the RB Tree"""
         if node is None or item == node.item:
             print(f"Node: {node}, Item: {item}")
             return node
@@ -60,9 +63,9 @@ class RedBlackTree:
         else:
             return None
 
-    """the insert helper function carries all the functionality of inserting a new node into
-    the RB Tree"""
     def insert(self, key):
+        """the insert helper function carries all the functionality of inserting a new node into
+    the RB Tree"""
         node = RedBlackNode(key)
         node.parent = None
         node.item = key
@@ -88,10 +91,10 @@ class RedBlackTree:
         else:
             parent.right = node
 
-        if node.parent == None:
+        if node.parent is None:
             node.color = 0
             return
-        if node.parent.parent == None:
+        if node.parent.parent is None:
             return
 
         self.balanceTree(node)
