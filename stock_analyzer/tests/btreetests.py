@@ -32,14 +32,14 @@ class BTreeTests(unittest.TestCase):
         tree.insert(17)
 
         self.assertEqual(tree.root.items, [5, 7])
-        self.assertEqual(tree.root.child_count(), 3)
+        self.assertEqual(tree.root.childCount(), 3)
         self.assertEqual(tree.root.children[0].items, [3, 4])
         self.assertEqual(tree.root.children[1].items, [6])
         self.assertEqual(tree.root.children[2].items, [11, 17])
 
         tree.insert(1)
         self.assertEqual(tree.root.items, [5])
-        self.assertEqual(tree.root.child_count(), 2)
+        self.assertEqual(tree.root.childCount(), 2)
         self.assertEqual(tree.root.children[0].items, [3])
         self.assertEqual(tree.root.children[1].items, [7])
         self.assertEqual(tree.root.children[0].children[0].items, [1])
